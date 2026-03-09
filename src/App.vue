@@ -9,6 +9,9 @@
           <router-link to="/compare" class="text-sm font-medium text-muted-foreground hover:text-primary no-underline transition-colors">
             Compare
           </router-link>
+          <router-link to="/factions/compare" class="text-sm font-medium text-muted-foreground hover:text-primary no-underline transition-colors">
+            Faction vs Faction
+          </router-link>
         </div>
       </header>
       <main class="pb-8">

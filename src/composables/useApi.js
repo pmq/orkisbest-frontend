@@ -10,6 +10,11 @@ export async function fetchFactionUnits(factionId) {
   return res.json()
 }
 
+export async function compareFactions(factionAId, factionBId) {
+  const res = await fetch(`${API_BASE}/factions/compare?factionA=${factionAId}&factionB=${factionBId}`)
+  return res.json()
+}
+
 export async function compareRosters(rosterA, rosterB) {
   const res = await fetch(`${API_BASE}/compare`, {
     method: 'POST',
