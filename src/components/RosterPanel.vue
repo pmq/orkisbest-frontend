@@ -9,7 +9,7 @@ defineProps({
   totalPoints: Number,
   pointsLimit: Number,
 })
-defineEmits(['remove', 'clear', 'show-detail'])
+defineEmits(['remove', 'clear', 'show-detail', 'save'])
 </script>
 
 <template>
@@ -56,6 +56,7 @@ defineEmits(['remove', 'clear', 'show-detail'])
       <div class="text-xs text-muted-foreground mt-1">
         {{ roster.reduce((s, e) => s + e.count, 0) }} models/units
       </div>
+      <Button class="w-full mt-3" @click="$emit('save')">Save as JSON</Button>
     </CardFooter>
   </Card>
 </template>

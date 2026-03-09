@@ -75,6 +75,27 @@ function showDetail(unit) {
 function closeDetail() {
   selectedUnit.value = null
 }
+
+function saveRoster() {
+  const data = {
+    faction: factionName.value,
+    pointsLimit: pointsLimitNum.value,
+    totalPoints: totalPoints.value,
+    units: roster.value.map(entry => ({
+      id: entry.unit.id,
+      name: entry.unit.name,
+      points: entry.unit.points,
+      count: entry.count,
+    })),
+  }
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `${factionName.value.toLowerCase().replace(/\s+/g, '-')}-roster.json`
+  a.click()
+  URL.revokeObjectURL(url)
+}
 </script>
 
 <template>
@@ -134,6 +155,7 @@ function closeDetail() {
         @remove="removeFromRoster"
         @clear="clearRoster"
         @show-detail="showDetail"
+        @save="saveRoster"
       />
     </div>
 
