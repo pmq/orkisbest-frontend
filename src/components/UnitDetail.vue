@@ -10,7 +10,7 @@ const emit = defineEmits(['close', 'add'])
 
 <template>
   <Dialog :open="!!unit" @update:open="val => { if (!val) emit('close') }">
-    <DialogContent class="!bg-slate-800 !text-slate-100 !border-2 !border-slate-600 max-w-3xl max-h-[90vh] overflow-y-auto shadow-2xl">
+    <DialogContent class="!bg-white !text-slate-900 !border !border-slate-200 max-w-3xl max-h-[90vh] overflow-y-auto shadow-2xl">
       <DialogHeader>
         <div class="flex justify-between items-start">
           <DialogTitle class="text-xl">{{ unit.name }}</DialogTitle>

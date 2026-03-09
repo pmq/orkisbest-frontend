@@ -124,7 +124,7 @@ function importRoster(data) {
             <SelectTrigger class="w-[120px]">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent class="!bg-white !text-slate-900 !border-slate-200">
               <SelectItem value="500">500 pts</SelectItem>
               <SelectItem value="1000">1000 pts</SelectItem>
               <SelectItem value="1500">1500 pts</SelectItem>
