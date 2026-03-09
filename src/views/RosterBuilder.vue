@@ -96,6 +96,18 @@ function saveRoster() {
   a.click()
   URL.revokeObjectURL(url)
 }
+
+function importRoster(data) {
+  if (!data?.units?.length) return
+  roster.value = data.units.map(entry => {
+    const unit = units.value.find(u => u.id === entry.id)
+    if (!unit) return null
+    return { unit, count: entry.count || 1 }
+  }).filter(Boolean)
+  if (data.pointsLimit) {
+    pointsLimit.value = String(data.pointsLimit)
+  }
+}
 </script>
 
 <template>
@@ -156,6 +168,7 @@ function saveRoster() {
         @clear="clearRoster"
         @show-detail="showDetail"
         @save="saveRoster"
+        @import="importRoster"
       />
     </div>
 

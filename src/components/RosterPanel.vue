@@ -1,15 +1,38 @@
 <script setup>
+import { ref } from 'vue'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
+
+const fileInput = ref(null)
+const emit = defineEmits(['remove', 'clear', 'show-detail', 'save', 'import'])
+
+function triggerImport() {
+  fileInput.value.click()
+}
+
+function onFileSelected(event) {
+  const file = event.target.files[0]
+  if (!file) return
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    try {
+      const data = JSON.parse(e.target.result)
+      emit('import', data)
+    } catch {
+      alert('Invalid JSON file')
+    }
+  }
+  reader.readAsText(file)
+  event.target.value = ''
+}
 
 defineProps({
   roster: Array,
   totalPoints: Number,
   pointsLimit: Number,
 })
-defineEmits(['remove', 'clear', 'show-detail', 'save'])
 </script>
 
 <template>
@@ -21,8 +44,10 @@ defineEmits(['remove', 'clear', 'show-detail', 'save'])
       </div>
     </CardHeader>
     <CardContent>
-      <div v-if="!roster.length" class="text-muted-foreground text-center py-8 text-sm">
-        Add units from the left panel to build your roster.
+      <input ref="fileInput" type="file" accept=".json" class="hidden" @change="onFileSelected" />
+      <div v-if="!roster.length" class="text-muted-foreground text-center py-8 text-sm space-y-3">
+        <p>Add units from the left panel to build your roster.</p>
+        <Button variant="outline" size="sm" @click="triggerImport">Import from JSON</Button>
       </div>
 
       <ScrollArea v-else class="max-h-[calc(100vh-16rem)]">
@@ -56,7 +81,10 @@ defineEmits(['remove', 'clear', 'show-detail', 'save'])
       <div class="text-xs text-muted-foreground mt-1">
         {{ roster.reduce((s, e) => s + e.count, 0) }} models/units
       </div>
-      <Button class="w-full mt-3" @click="$emit('save')">Save as JSON</Button>
+      <div class="flex gap-2 mt-3">
+        <Button variant="outline" class="flex-1" @click="triggerImport">Import</Button>
+        <Button class="flex-1" @click="$emit('save')">Save as JSON</Button>
+      </div>
     </CardFooter>
   </Card>
 </template>
