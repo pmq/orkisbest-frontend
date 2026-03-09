@@ -83,7 +83,7 @@ defineProps({
       </div>
       <div class="flex gap-2 mt-3">
         <Button variant="outline" class="flex-1" @click="triggerImport">Import</Button>
-        <Button class="flex-1" @click="$emit('save')">Save as JSON</Button>
+        <Button variant="outline" class="flex-1" @click="$emit('save')">Save as JSON</Button>
       </div>
     </CardFooter>
   </Card>
