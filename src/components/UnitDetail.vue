@@ -10,7 +10,7 @@ const emit = defineEmits(['close', 'add'])
 
 <template>
   <Dialog :open="!!unit" @update:open="val => { if (!val) emit('close') }">
-    <DialogContent class="max-w-3xl max-h-[90vh] overflow-y-auto">
+    <DialogContent class="!bg-slate-800 !text-slate-100 !border-2 !border-slate-600 max-w-3xl max-h-[90vh] overflow-y-auto shadow-2xl">
       <DialogHeader>
         <div class="flex justify-between items-start">
           <DialogTitle class="text-xl">{{ unit.name }}</DialogTitle>
@@ -27,7 +27,7 @@ const emit = defineEmits(['close', 'add'])
           'W': unit.stats.wounds,
           'LD': unit.stats.leadership,
           'OC': unit.stats.objectiveControl,
-        }" :key="label" class="flex flex-col items-center bg-background rounded-md px-3 py-1.5 min-w-[50px]">
+        }" :key="label" class="flex flex-col items-center bg-muted rounded-md px-3 py-1.5 min-w-[50px]">
           <span class="text-[0.65rem] text-muted-foreground uppercase">{{ label }}</span>
           <span class="text-lg font-bold font-mono">{{ value }}</span>
         </div>
