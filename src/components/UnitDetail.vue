@@ -113,7 +113,7 @@ const emit = defineEmits(['close', 'add'])
       </div>
 
       <DialogFooter class="mt-4">
-        <Button class="w-full" @click="emit('add')">+ Add to Roster</Button>
+        <Button variant="outline" class="w-full" @click="emit('add')">+ Add to Roster</Button>
       </DialogFooter>
     </DialogContent>
   </Dialog>
