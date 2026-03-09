@@ -1,6 +1,9 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { fetchFactionUnits, fetchFactions } from '../composables/useApi'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import UnitCard from '../components/UnitCard.vue'
 import RosterPanel from '../components/RosterPanel.vue'
 import UnitDetail from '../components/UnitDetail.vue'
@@ -27,7 +30,9 @@ const totalPoints = computed(() =>
   roster.value.reduce((sum, entry) => sum + entry.unit.points * entry.count, 0)
 )
 
-const pointsLimit = ref(2000)
+const pointsLimit = ref('2000')
+
+const pointsLimitNum = computed(() => Number(pointsLimit.value))
 
 onMounted(async () => {
   const [factions, unitList] = await Promise.all([
@@ -74,39 +79,44 @@ function closeDetail() {
 
 <template>
   <div>
-    <div class="top-bar">
+    <div class="flex justify-between items-start mb-4 flex-wrap gap-2">
       <div>
-        <router-link to="/" class="back">&larr; Factions</router-link>
-        <h1>{{ factionName }}</h1>
+        <router-link to="/" class="text-primary text-sm hover:underline no-underline">&larr; Factions</router-link>
+        <h1 class="text-2xl font-bold mt-1">{{ factionName }}</h1>
       </div>
-      <div class="points-bar">
-        <label>
-          Limit:
-          <select v-model.number="pointsLimit">
-            <option :value="500">500 pts</option>
-            <option :value="1000">1000 pts</option>
-            <option :value="1500">1500 pts</option>
-            <option :value="2000">2000 pts</option>
-            <option :value="3000">3000 pts</option>
-          </select>
-        </label>
-        <span :class="{ over: totalPoints > pointsLimit }">
-          {{ totalPoints }} / {{ pointsLimit }} pts
+      <div class="flex items-center gap-4 text-lg font-semibold">
+        <div class="flex items-center gap-2">
+          <span class="text-sm text-muted-foreground">Limit:</span>
+          <Select v-model="pointsLimit">
+            <SelectTrigger class="w-[120px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="500">500 pts</SelectItem>
+              <SelectItem value="1000">1000 pts</SelectItem>
+              <SelectItem value="1500">1500 pts</SelectItem>
+              <SelectItem value="2000">2000 pts</SelectItem>
+              <SelectItem value="3000">3000 pts</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <span :class="{ 'text-destructive': totalPoints > pointsLimitNum }">
+          {{ totalPoints }} / {{ pointsLimitNum }} pts
         </span>
       </div>
     </div>
 
-    <div v-if="loading" class="loading">Loading units...</div>
+    <div v-if="loading" class="text-center py-12 text-muted-foreground">Loading units...</div>
 
-    <div v-else class="builder-layout">
-      <div class="unit-browser">
-        <input
+    <div v-else class="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6 items-start">
+      <div>
+        <Input
           v-model="search"
           type="text"
           placeholder="Search units or keywords..."
-          class="search-input"
+          class="mb-4"
         />
-        <div class="unit-list">
+        <div class="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-3">
           <UnitCard
             v-for="unit in filteredUnits"
             :key="unit.id"
@@ -120,7 +130,7 @@ function closeDetail() {
       <RosterPanel
         :roster="roster"
         :totalPoints="totalPoints"
-        :pointsLimit="pointsLimit"
+        :pointsLimit="pointsLimitNum"
         @remove="removeFromRoster"
         @clear="clearRoster"
         @show-detail="showDetail"
@@ -135,89 +145,3 @@ function closeDetail() {
     />
   </div>
 </template>
-
-<style scoped>
-.top-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 1rem;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.back {
-  color: var(--accent);
-  text-decoration: none;
-  font-size: 0.85rem;
-}
-
-.back:hover {
-  text-decoration: underline;
-}
-
-h1 {
-  font-size: 1.5rem;
-  margin-top: 0.25rem;
-}
-
-.points-bar {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  font-size: 1.1rem;
-  font-weight: 600;
-}
-
-.points-bar select {
-  background: var(--bg-card);
-  color: var(--text);
-  border: 1px solid var(--border);
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-}
-
-.points-bar .over {
-  color: var(--accent);
-}
-
-.loading {
-  text-align: center;
-  padding: 3rem;
-  color: var(--text-muted);
-}
-
-.builder-layout {
-  display: grid;
-  grid-template-columns: 1fr 380px;
-  gap: 1.5rem;
-  align-items: start;
-}
-
-@media (max-width: 900px) {
-  .builder-layout {
-    grid-template-columns: 1fr;
-  }
-}
-
-.search-input {
-  width: 100%;
-  padding: 0.6rem 1rem;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  color: var(--text);
-  font-size: 0.95rem;
-  margin-bottom: 1rem;
-}
-
-.search-input::placeholder {
-  color: var(--text-muted);
-}
-
-.unit-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 0.75rem;
-}
-</style>
